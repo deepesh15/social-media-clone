@@ -4,7 +4,8 @@ import ClickOutHandler from 'react-clickout-handler';
 import { useState } from 'react';
 import Link from 'next/link';
 
-export default function PostCard() {
+export default function PostCard({ content, profiles: profile }) {
+	console.log(content, profile);
 	const [dropDownOpen, setDropDownOpen] = useState(false);
 
 	function openDropDown(e) {
@@ -22,14 +23,14 @@ export default function PostCard() {
 				<div>
 					<Link href={'/profile'}>
 						<span className='cursor-pointer'>
-							<Avatar />
+							<Avatar url={profile.avatar} />
 						</span>
 					</Link>
 				</div>
 				<div className='grow'>
 					<p>
 						<Link href={'/profile'}>
-							<span className='mr-1 font-semibold hover:underline cursor-pointer'>John doe</span>
+							<span className='mr-1 font-semibold hover:underline cursor-pointer'>{profile.name}</span>
 						</Link>{' '}
 						shared a <a className='text-socialBlue'>album</a>
 					</p>
@@ -84,7 +85,7 @@ export default function PostCard() {
 				</div>
 			</div>
 			<div>
-				<p className='my-3 text-sm '>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt cupiditate doloremque placeat atque possimus? Id ratione eius veniam eum tempora, tenetur reprehenderit omnis amet dolores neque. Veritatis deserunt nemo repellat?</p>
+				<p className='my-3 text-sm '>{content}</p>
 				<div className=' rounded-md overflow-hidden  '>
 					<img className='object-cover w-full' src='https://images.unsplash.com/photo-1559509547-cebb0e1da8da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGJsdWUlMjBza3l8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60' />
 				</div>
@@ -110,7 +111,7 @@ export default function PostCard() {
 				</div>
 				<div className='flex mt-4 gap-3'>
 					<div>
-						<Avatar />
+						<Avatar url={profile.avatar} />
 					</div>
 					<div className='border grow rounded-lg relative'>
 						<textarea className='w-full block rounded-lg p-3 px-4 h-12 overflow-hidden resize-none' placeholder='Leave a comment'></textarea>

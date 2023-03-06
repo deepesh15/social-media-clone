@@ -2,7 +2,7 @@ import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useEffect, useState } from 'react';
 import Avatar from './Avatar';
 import Card from './Card';
-export default function PostForm() {
+export default function PostForm({ onPost }) {
 	const [profile, setProfile] = useState();
 	const [content, setContent] = useState('');
 	const supabaseClient = useSupabaseClient();
@@ -30,6 +30,9 @@ export default function PostForm() {
 			.then((response) => {
 				if (!response.error) {
 					setContent('');
+					if (onPost) {
+						onPost();
+					}
 				}
 			});
 	};
