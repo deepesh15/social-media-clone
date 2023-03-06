@@ -1,13 +1,50 @@
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useEffect, useState } from 'react';
 import Avatar from './Avatar';
 import Card from './Card';
 export default function PostForm() {
+	const [profile, setProfile] = useState();
+	const [content, setContent] = useState('');
+	const supabaseClient = useSupabaseClient();
+	const session = useSession();
+
+	useEffect(() => {
+		supabaseClient
+			.from('profiles')
+			.select()
+			.eq('id', session.user.id)
+			.then((result) => {
+				if (result.data.length) {
+					setProfile(result.data[0]);
+				}
+			});
+	}, []);
+
+	const createPost = () => {
+		supabaseClient
+			.from('posts')
+			.insert({
+				author: session.user.id,
+				content,
+			})
+			.then((response) => {
+				if (!response.error) {
+					setContent('');
+				}
+			});
+	};
+
+	//  add a spinner or something
+	if (!profile) {
+		return 'waiting for profile info';
+	}
 	return (
 		<Card>
 			<div className='flex gap-2 '>
 				<div>
-					<Avatar />
+					<Avatar url={profile.avatar} />
 				</div>
-				<textarea className='border rounded-lg grow p-3 h-14 resize-none' placeholder={"What's on your mind ?"} />
+				<textarea value={content} onChange={(e) => setContent(e.target.value)} className='border rounded-lg grow p-3 h-14 resize-none' placeholder={`What's on your mind, ${profile.name}?`} />
 			</div>
 			<div className='flex gap-5 items-center mt-2 '>
 				<div>
@@ -36,7 +73,9 @@ export default function PostForm() {
 					</button>
 				</div>
 				<div className='grow text-right'>
-					<button className='bg-socialBlue text-white px-6 py-1 rounded-md'>Share</button>
+					<button onClick={createPost} className='bg-socialBlue text-white px-6 py-1 rounded-md'>
+						Share
+					</button>
 				</div>
 			</div>
 		</Card>
