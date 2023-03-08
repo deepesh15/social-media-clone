@@ -1,13 +1,14 @@
 import Card from './Card';
 import Avatar from './Avatar';
 import ClickOutHandler from 'react-clickout-handler';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Link from 'next/link';
+import ReactTimeAgo from 'react-time-ago';
+import { UserContext } from '@/contexts/UserContext';
 
-export default function PostCard({ content, profiles: profile }) {
-	console.log(content, profile);
+export default function PostCard({ content, created_at, profiles: authorProfile }) {
 	const [dropDownOpen, setDropDownOpen] = useState(false);
-
+	const {profile:myProfile} = useContext(UserContext)
 	function openDropDown(e) {
 		e.stopPropagation();
 		setDropDownOpen(true);
@@ -23,18 +24,20 @@ export default function PostCard({ content, profiles: profile }) {
 				<div>
 					<Link href={'/profile'}>
 						<span className='cursor-pointer'>
-							<Avatar url={profile.avatar} />
+							<Avatar url={authorProfile.avatar} />
 						</span>
 					</Link>
 				</div>
 				<div className='grow'>
 					<p>
 						<Link href={'/profile'}>
-							<span className='mr-1 font-semibold hover:underline cursor-pointer'>{profile.name}</span>
+							<span className='mr-1 font-semibold hover:underline cursor-pointer'>{authorProfile.name}</span>
 						</Link>{' '}
-						shared a <a className='text-socialBlue'>album</a>
+						shared a <a className='text-socialBlue'>post</a>
 					</p>
-					<p className='text-gray-500 text-sm'>2 hours ago</p>
+					<p className='text-gray-500 text-sm'>
+						<ReactTimeAgo date={created_at}></ReactTimeAgo>
+					</p>
 				</div>
 				<div className='relative'>
 					<button className='text-gray-500' onClick={openDropDown}>
@@ -111,7 +114,7 @@ export default function PostCard({ content, profiles: profile }) {
 				</div>
 				<div className='flex mt-4 gap-3'>
 					<div>
-						<Avatar url={profile.avatar} />
+						<Avatar url={myProfile?.avatar} />
 					</div>
 					<div className='border grow rounded-lg relative'>
 						<textarea className='w-full block rounded-lg p-3 px-4 h-12 overflow-hidden resize-none' placeholder='Leave a comment'></textarea>
