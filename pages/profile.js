@@ -5,30 +5,58 @@ import Layout from '@/components/Layout';
 import PostCard from '@/components/PostCard';
 import { useRouter } from 'next/router';
 import FriendInfo from '@/components/FriendInfo';
+import { useEffect, useState } from 'react';
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react';
+import Cover from '@/components/Cover';
 
 export default function ProfilePage() {
+	const [profile, setProfile] = useState(null);
 	const router = useRouter();
+	const session = useSession();
+	const userId = router.query.id;
 	const { asPath: pathname } = router;
+	const supabaseClient = useSupabaseClient();
+
+	const fetchUser = () => {
+		supabaseClient
+			.from('profiles')
+			.select()
+			.eq('id', userId)
+			.then((res) => {
+				if (res.error) {
+					throw res.error;
+				}
+				if (res.data) {
+					setProfile(res.data[0]);
+				}
+			});
+	}
+
+	useEffect(() => {
+		if (!userId) {
+			return;
+		}
+		fetchUser()
+
+	}, [userId]);
+
 	const isPosts = pathname.includes('posts') || pathname === '/profile';
 	const isFriends = pathname.includes('friends');
 	const isPhotos = pathname.includes('photos');
 	const isAbout = pathname.includes('about');
 	const tabClasses = 'flex gap-2 items-center px-2 py-3 border-b-2 border-b-white transition-all hover:border-b-socialBlue hover:text-socialBlue';
 	const activeTabClasses = 'flex gap-2 items-center px-2 py-3  border-b-socialBlue text-socialBlue border-b-2';
+	const isMyUser = userId === session?.user?.id;
 	return (
 		<Layout>
 			<Card noPadding={true}>
 				<div className='relative overflow-hidden rounded-md'>
-					<div className='h-40 overflow-hidden flex justify-center items-center'>
-						<img src='https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1203&q=80' />
-					</div>
-					<div className='absolute top-24 left-4'>
-						<Avatar size={'lg'} />
-					</div>
-					<div className='p-4 pt-0 md:pt-4 pb-0'>
-						<div className='ml-24 md:ml-40'>
-							<h1 className='text-xl font-bold'>John Doe</h1>
-							<p className='text-gray-500 leading-4'>Berlin, Germany</p>
+					<Cover url={profile?.cover} editable={isMyUser} onChange={fetchUser} />
+					<div className='absolute top-24 left-4 '>{profile && <Avatar url={profile.avatar} size={'lg'} />}</div>
+					<div className='p-4 pt-0 md:pt-4 pb-0  '>
+						<div className='ml-24 md:ml-40 '>
+							<h1 className='text-xl font-bold'>{profile?.name}</h1>
+							<p className='text-gray-500 leading-4'>{profile?.place}</p>
 						</div>
 						<div className='mt-2 md:mt-5 flex gap-5 justify-between'>
 							<Link href={'/profile/posts'} className={isPosts ? activeTabClasses : tabClasses}>
