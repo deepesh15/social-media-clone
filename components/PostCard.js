@@ -6,9 +6,9 @@ import Link from 'next/link';
 import ReactTimeAgo from 'react-time-ago';
 import { UserContext } from '@/contexts/UserContext';
 
-export default function PostCard({ content, created_at, profiles: authorProfile }) {
+export default function PostCard({ content, photos, created_at, profiles: authorProfile }) {
 	const [dropDownOpen, setDropDownOpen] = useState(false);
-	const {profile:myProfile} = useContext(UserContext)
+	const { profile: myProfile } = useContext(UserContext);
 	function openDropDown(e) {
 		e.stopPropagation();
 		setDropDownOpen(true);
@@ -89,9 +89,16 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
 			</div>
 			<div>
 				<p className='my-3 text-sm '>{content}</p>
-				<div className=' rounded-md overflow-hidden  '>
-					<img className='object-cover w-full' src='https://images.unsplash.com/photo-1559509547-cebb0e1da8da?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGJsdWUlMjBza3l8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60' />
-				</div>
+				{photos?.length > 0 && (
+					<div className='flex gap-4'>
+						{photos.map((photo) => (
+							<div>
+								<img className='  rounded-md overflow-hidden  ' src={photo} />{' '}
+							</div>
+						))}
+					</div>
+				)}
+
 				<div className='flex mt-4 gap-8'>
 					<button className='flex gap-1 items-center'>
 						<svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='w-6 h-6'>
