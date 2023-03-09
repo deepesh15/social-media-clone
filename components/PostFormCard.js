@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import Avatar from './Avatar';
 import Card from './Card';
 import Preloader from './Preloader';
+//! do not post empty status
 
 export default function PostForm({ onPost }) {
 	const [content, setContent] = useState('');

@@ -15,7 +15,7 @@ export default function Home() {
 	useEffect(() => {
 		fetchPosts();
 	}, []);
-	
+
 	useEffect(() => {
 		if (!session?.user?.id) {
 			return;

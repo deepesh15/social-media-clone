@@ -8,7 +8,8 @@ import { UserContext } from '@/contexts/UserContext';
 
 export default function PostCard({ content, photos, created_at, profiles: authorProfile }) {
 	const [dropDownOpen, setDropDownOpen] = useState(false);
-	const { profile: myProfile } = useContext(UserContext);
+	const { profile } = useContext(UserContext);
+
 	function openDropDown(e) {
 		e.stopPropagation();
 		setDropDownOpen(true);
@@ -18,7 +19,6 @@ export default function PostCard({ content, photos, created_at, profiles: author
 		e.stopPropagation();
 		setDropDownOpen(false);
 	}
-	
 	return (
 		<Card>
 			<div className='flex gap-3'>
@@ -37,7 +37,7 @@ export default function PostCard({ content, photos, created_at, profiles: author
 						shared a <a className='text-socialBlue'>post</a>
 					</p>
 					<p className='text-gray-500 text-sm'>
-						<ReactTimeAgo date={created_at}></ReactTimeAgo>
+						<ReactTimeAgo date={Date.parse(created_at)}></ReactTimeAgo>
 					</p>
 				</div>
 				<div className='relative'>
@@ -93,7 +93,7 @@ export default function PostCard({ content, photos, created_at, profiles: author
 				{photos?.length > 0 && (
 					<div className='flex gap-4'>
 						{photos.map((photo) => (
-							<div>
+							<div key={photo.url}>
 								<img className='  rounded-md overflow-hidden  ' src={photo} />{' '}
 							</div>
 						))}
@@ -122,7 +122,7 @@ export default function PostCard({ content, photos, created_at, profiles: author
 				</div>
 				<div className='flex mt-4 gap-3'>
 					<div>
-						<Avatar url={myProfile?.avatar} />
+						<Avatar url={profile?.avatar} />
 					</div>
 					<div className='border grow rounded-lg relative'>
 						<textarea className='w-full block rounded-lg p-3 px-4 h-12 overflow-hidden resize-none' placeholder='Leave a comment'></textarea>
