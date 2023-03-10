@@ -35,6 +35,7 @@ export default function Home() {
 		supabaseClient
 			.from('posts')
 			.select('id,content,created_at,photos,profiles(id,avatar,name)')
+			.is('parent', null)
 			.order('created_at', { ascending: false })
 			.then((res) => {
 				setPosts(res.data);
