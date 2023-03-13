@@ -72,7 +72,7 @@ export default function PostForm({ onPost }) {
 				</div>
 			)}
 			{uploads.length > 0 && (
-				<div className='flex gap-2'>
+				<div key={uploads} className='flex gap-2'>
 					{uploads.map((upload) => (
 						<div className=''>
 							<img src={upload} className='w-auto h-24 rounded-md m-4' />

@@ -19,7 +19,6 @@ export default function SavedPosts() {
 			.eq('user_id', session.user.id)
 			.then((res) => {
 				const postsIds = res.data.map((item) => item.post_id);
-				console.log(postsIds);
 				supabaseClient
 					.from('posts')
 					.select('*,profiles(*)')
