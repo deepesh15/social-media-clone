@@ -6,6 +6,7 @@ import Link from 'next/link';
 import ReactTimeAgo from 'react-time-ago';
 import { UserContext } from '@/contexts/UserContext';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import EmojiPicker from 'emoji-picker-react';
 
 export default function PostCard({ id, content, photos, created_at, profiles: authorProfile }) {
 	const [dropDownOpen, setDropDownOpen] = useState(false);
@@ -124,7 +125,7 @@ export default function PostCard({ id, content, photos, created_at, profiles: au
 			});
 	}
 
-	async function deletePost() {
+	const deletePost = async () => {
 		// only delete it if the user is the one who posted it
 		if (profile?.id === authorProfile?.id) {
 			if (photos?.length > 0) {
@@ -157,7 +158,7 @@ export default function PostCard({ id, content, photos, created_at, profiles: au
 			}
 			setDeletedPost(true);
 		}
-	}
+	};
 
 	const deleteComment = async (comment_id) => {
 		const { error } = await supabaseClient.from('posts').delete().eq('id', comment_id);
@@ -302,6 +303,7 @@ export default function PostCard({ id, content, photos, created_at, profiles: au
 									className='w-full block rounded-lg p-3 px-4 h-12 overflow-hidden resize-none'
 									placeholder='Leave a comment'
 								/>
+								
 							</form>
 
 							<button className='absolute top-3 right-3 text-gray-500'>
